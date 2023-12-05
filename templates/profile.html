@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title of the page -->
+    <title>Profile</title>
+
+    <!-- Google Fonts and Font Awesome icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- Styles for the page -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFF4BC;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            color: #DBB51B;
+            margin-bottom: 20px;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            margin-top: 400px; /* Note: this seems like an unusually large margin-top */
+        }
+
+        /* Individual navigation button */
+        .nav-button {
+            font-size: 28px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            background-color: #DBB51B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            text-decoration: none;
+            color: #FFF4BC;
+        }
+
+        /* Hover effect for navigation buttons */
+        .nav-button:hover {
+            background-color: #ECB753;
+        }
+
+        /* Centered image */
+        #center-image img {
+            width: 380px;
+            height: 240px;
+            margin-top: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        /* Container for saved pets */
+        .pet-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Card style for each saved pet */
+        .pet-card {
+            width: 300px;
+            margin: 10px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Styling for pet images in cards */
+        .pet-card img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Button to save a pet */
+        .save-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Styling for the heart icon in save button */
+        .save-button i {
+            color: red;
+            font-size: 24px;
+        }
+
+        /* Styling for clicked state of save button */
+        .save-button.clicked i {
+            color: #777;
+        }
+
+        /* Styling for pet details content */
+        .pet-content {
+            text-align: center;
+        }
+
+        .pet-content p {
+            margin: 0;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation buttons section -->
+    <div class="nav-buttons">
+        <!-- Home button with an icon -->
+        <a href="/home" class="nav-button"><i class="fas fa-home"></i></a>
+        <!-- Dog button with a dog icon -->
+        <a href="/dog" class="nav-button"><i class="fas fa-dog"></i></a>
+        <!-- Cat button with a cat icon -->
+        <a href="/cat" class="nav-button"><i class="fas fa-cat"></i></a>
+        <!-- Logout button with a sign-out icon -->
+        <a href="{{ url_for('logout') }}" class="nav-button" style="background-color: #FF6F61;"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+
+    <!-- Centered image section -->
+    <div id="center-image">
+        <img src="https://imgur.com/AtIKxK6.png" alt="PUP">
+    </div>
+
+    <!-- Welcome message -->
+    <h2>Welcome to your profile, {{ user.username }}!</h2>
+
+    <!-- Section for saved pets -->
+    <h2>Saved Pets</h2>
+    <div class="pet-container">
+        <!-- Loop through saved pets and display cards for each -->
+        {% for saved_pet in saved_pets %}
+        <div class="pet-card">
+            <!-- Save button with heart icon -->
+            <button class="save-button" onclick="handleSaveClick(this)" data-pet-id="{{ saved_pet.pet_id }}">
+                <i class="fas fa-heart"></i>
+            </button>
+            <!-- Content for each saved pet -->
+            <div class="pet-content">
+                <p>Name: {{ saved_pet.name }}</p>
+                <p>Age: {{ saved_pet.age }}</p>
+                <!-- Display contact information if available -->
+                {% if saved_pet.contact %}
+                <ul>
+                    <p>Email: {{ saved_pet.contact.email }}</li>
+                    <p>Phone: {{ saved_pet.contact.phone }}</li>
+                    <!-- Display address details if available -->
+                    {% if saved_pet.address %}
+                        <p>Address:
+                        {% if saved_pet.address.address1 %} {{ saved_pet.address.address1 }} {% endif %}
+                        {% if saved_pet.address.address2 %} {{ saved_pet.address.address2 }} {% endif %}
+                        {% if saved_pet.address.city %} {{ saved_pet.address.city }} {% endif %}
+                        {% if saved_pet.address.state %} {{ saved_pet.address.state }} {% endif %}
+                        {% if saved_pet.address.postcode %} {{ saved_pet.address.postcode }} {% endif %}
+                        {% if saved_pet.address.country %} {{ saved_pet.address.country }} {% endif %}
+                    </li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+                <!-- Display pet photos if available -->
+                {% if saved_pet.photos %}
+                <div class="pet-photos">
+                    <img src="{{ saved_pet.photos[0] }}" alt="Pet Photo">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- JavaScript script for handling save button clicks -->
+    <script>
+        function handleSaveClick(button) {
+            button.classList.toggle('clicked');
+            const petId = button.getAttribute('data-pet-id');
+            fetch(`/save_pet/${petId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.error('Failed to save pet.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
