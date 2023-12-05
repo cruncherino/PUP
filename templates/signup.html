@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title of the page -->
+    <title>Signup</title>
+
+    <!-- Google Fonts and Font Awesome icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+
+    <!-- Styles for the page -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFF4BC;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Styles for the signup container */
+        #signup-container {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        /* Styles for input fields */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        /* Styles for the signup button */
+        button {
+            background-color: #DBB51B;
+            color: #FFF4BC;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Hover effect for the signup button */
+        button:hover {
+            background-color: #ECB753;
+        }
+
+        /* Styles for error messages */
+        .message {
+            margin-top: 20px;
+            color: red;
+        }
+
+        /* Styles for the welcome message */
+        .welcome-message {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        /* Styles for top-right buttons */
+        #top-right-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Styles for the home button */
+        .home-button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #DBB51B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Styles for the home button icon */
+        .home-button i {
+            color: #FFF4BC;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top-right buttons section -->
+    <div id="top-right-buttons">
+        <!-- Home button with an icon -->
+        <button class="home-button" onclick="location.href='/home'"><i class="fa fa-home"></i></button>
+    </div>
+
+    <!-- Signup container -->
+    <div id="signup-container">
+        <!-- Welcome message -->
+        <div class="welcome-message">
+            <p>Welcome! We're so happy you're here.</p>
+        </div>
+
+        <!-- Form for user signup -->
+        <form action="/signup" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Signup</button>
+        </form>
+
+        <!-- Display flashed messages if any -->
+        {% if get_flashed_messages() %}
+            <p class="message">{{ get_flashed_messages() }}</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
