@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title of the page -->
+    <title>Pet Details</title>
+
+    <!-- Google Fonts and Font Awesome icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- Styles for the page -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFF4BC;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header styles */
+        #header {
+            width: 100%;
+            background-color: #DBB51B;
+            padding: 9px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Logo styles */
+        #logo {
+            width: 100px;
+            height: auto;
+        }
+
+        /* Button container styles */
+        #buttons {
+            display: flex;
+            gap: 10px;
+            margin: 10px;
+        }
+
+        /* Common button styles */
+        .button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #DBB51B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        /* Button hover effect */
+        .button:hover {
+            background-color: #ECB753;
+        }
+
+        /* Icon styles for buttons */
+        .button i {
+            color: #FFF4BC;
+            font-size: 24px;
+        }
+
+        /* Save button styles */
+        .save-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Save button icon styles */
+        .save-button i {
+            color: #777;
+            font-size: 24px;
+        }
+
+        /* Save button icon styles for the red state */
+        .save-button i.red {
+            color: red;
+        }
+
+        /* Centered image section styles */
+        #center-image {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Centered image styles */
+        #center-image img {
+            width: 380px;
+            height: 240px;
+        }
+
+        /* Container for pet details */
+        .pet-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Card style for each pet details */
+        .pet-card {
+            position: relative;
+            width: 800px;
+            margin: 10px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Styling for pet images in cards */
+        .pet-card img {
+            flex: 1;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Styling for pet content in cards */
+        .pet-content {
+            width: 40%;
+            margin-left: 20px;
+            max-width: 100%;
+        }
+
+        /* Styling for pet content paragraphs */
+        .pet-content p {
+            margin: 0;
+            word-wrap: break-word;
+        }
+
+        /* Learn more button styles */
+        .learn-more-button {
+            background-color: #DBB51B;
+            color: #FFF4BC;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+        }
+
+        /* Learn more button hover effect */
+        .learn-more-button:hover {
+            background-color: #ECB753;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header section -->
+    <div id="header">
+        <!-- Logo image -->
+        <img id="logo" src="https://imgur.com/AtIKxK6.png" alt="Logo">
+        <!-- Button container -->
+        <div id="buttons">
+            <!-- Sign-in button -->
+            <button class="button" onclick="location.href='/login'"><i class="fas fa-sign-in-alt"></i></button>
+
+            <!-- Profile button (conditional) -->
+            {% if current_user.is_authenticated %}
+                <button class="button profile-button" onclick="location.href='/profile/{{ current_user.username }}'">
+                    <i class="fas fa-user"></i>
+                </button>
+            {% else %}
+                <button class="button" onclick="location.href='/login'">
+                    <i class="fas fa-user"></i>
+                </button>
+            {% endif %}
+
+            <!-- Home, Dog, and Cat buttons -->
+            <button class="button" onclick="location.href='/home'"><i class="fas fa-home"></i></button>
+            <button class="button" onclick="location.href='/dog'"><i class="fas fa-dog"></i></button>
+            <button class="button" onclick="location.href='/cat'"><i class="fas fa-cat"></i></button>
+        </div>
+    </div>
+
+    <!-- Centered image section -->
+    <div id="center-image">
+        <img src="https://imgur.com/AtIKxK6.png" alt="Centered Image">
+    </div>
+
+    <!-- Pet details container -->
+    <div class="pet-container">
+        <!-- Card for pet details -->
+        <div class="pet-card">
+            <!-- Save button with heart icon -->
+            <button class="save-button" onclick="handleSaveClick(this)" data-pet-id="{{ pet.id }}">
+                <i class="fas fa-heart"></i>
+            </button>
+
+            <!-- Display pet photo or message if no photo -->
+            {% if pet.photos %}
+                {% if pet.photos[0].medium %}
+                    <img src="{{ pet.photos[0].medium }}" alt="Pet Photo">
+                {% elif pet.photos[0].small %}
+                    <img src="{{ pet.photos[0].small }}" alt="Pet Photo">
+                {% endif %}
+            {% else %}
+                <p>No picture yet, but I still need a friend! Learn more about me!</p>
+            {% endif %}
+
+            <!-- Pet content section -->
+            <div class="pet-content">
+                <!-- Display pet details if available -->
+                {% if pet.name %}
+                    <p>Name: {{ pet.name }}</p>
+                {% endif %}
+                {% if pet.breed %}
+                    <p>Breed: {{ pet.breed }}</p>
+                {% endif %}
+                {% if pet.age %}
+                    <p>Age: {{ pet.age }}</p>
+                {% endif %}
+                {% if pet.gender %}
+                    <p>Gender: {{ pet.gender }}</p>
+                {% endif %}
+                {% if pet.location %}
+                    <p>Where I am: {{ pet.location }}</p>
+                {% endif %}
+
+                <!-- Display contact information if available -->
+                {% if pet.contact %}
+                    <p>Contact Information:</p>
+                    <ul>
+                        <li>Email: {{ pet.contact.email }}</li>
+                        <li>Phone: {{ pet.contact.phone }}</li>
+
+                        <!-- Display address if available -->
+                        {% if pet.contact.address %}
+                            <li>Address: 
+                                {% if pet.contact.address.address1 %} {{ pet.contact.address.address1 }} {% endif %}
+                                {% if pet.contact.address.address2 %} {{ pet.contact.address.address2 }} {% endif %}
+                                {% if pet.contact.address.city %} {{ pet.contact.address.city }} {% endif %}
+                                {% if pet.contact.address.state %} {{ pet.contact.address.state }} {% endif %}
+                                {% if pet.contact.address.postcode %} {{ pet.contact.address.postcode }} {% endif %}
+                                {% if pet.contact.address.country %} {{ pet.contact.address.country }} {% endif %}
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
+                <!-- Display preferences regarding children, dogs, and cats if available -->
+                {% if pet.good_with_children is defined %}
+                    {% if pet.good_with_children %}
+                        <p>Do I like kids?: I love them!</p>
+                    {% else %}
+                        <p>Do I like kids?: I need my space.</p>
+                    {% endif %}
+                {% endif %}
+
+                {% if pet.good_with_dogs is defined %}
+                    {% if pet.good_with_dogs %}
+                        <p>Do I like dogs?: Absolutely! Let's play!</p>
+                    {% else %}
+                        <p>Do I like dogs?: I'd prefer to be an only child.</p>
+                    {% endif %}
+                {% endif %}
+
+                {% if pet.good_with_cats is defined %}
+                    {% if pet.good_with_cats %}
+                        <p>Do I like cats?: Meowsolutely!</p>
+                    {% else %}
+                        <p>Do I like cats?: Not feline it. </p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript section for handling save button click -->
+    <script>
+        function handleSaveClick(button) {
+            const petId = button.getAttribute('data-pet-id');
+            fetch(`/save_pet/${petId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        button.querySelector('i').classList.toggle('red');
+                    } else {
+                        console.error('Failed to save pet.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
