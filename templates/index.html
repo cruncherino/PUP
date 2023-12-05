@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title and external styles -->
+    <title>Your New Best Friend</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- Styles for the page -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFF4BC;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header styles */
+        #header {
+            width: 100%;
+            background-color: #DBB51B;
+            padding: 9px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #logo {
+            width: 100px;
+            height: auto;
+        }
+
+        /* Refresh button styles */
+        #refresh-button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 40px;
+            color: #DBB51B;
+        }
+
+        /* Button container styles */
+        #buttons {
+            display: flex;
+            gap: 10px;
+            margin: 10px;
+        }
+
+        /* Generic button styles */
+        .button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #DBB51B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .button:hover {
+            background-color: #ECB753;
+        }
+
+        .button i {
+            color: #FFF4BC;
+            font-size: 24px;
+        }
+
+        /* Center image styles */
+        #center-image {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        #center-image img {
+            width: 380px;
+            height: 240px;
+        }
+
+        /* Pet container styles */
+        .pet-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        /* Pet card styles */
+        .pet-card {
+            width: 30%;
+            height: 600px;
+            margin: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .pet-card img {
+            width: 100%;
+            height: 70%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .pet-content {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Learn more button styles */
+        .learn-more-button {
+            background-color: #DBB51B;
+            color: #FFF4BC;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .learn-more-button:hover {
+            background-color: #ECB753;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header section -->
+    <div id="header">
+        <img id="logo" src="https://imgur.com/AtIKxK6.png" alt="Logo">
+        <div id="buttons">
+            <!-- Login button -->
+            <button class="button" onclick="location.href='/login'"><i class="fas fa-sign-in-alt"></i></button>
+            <!-- Profile button -->
+            {% if current_user.is_authenticated %}
+                <button class="button profile-button" onclick="handleProfileButtonClick()">
+                    <i class="fas fa-user"></i>
+                </button>
+            {% else %}
+                <button class="button" onclick="location.href='/login'">
+                    <i class="fas fa-user"></i>
+                </button>
+            {% endif %}
+            <!-- Home, Dog, Cat buttons -->
+            <button class="button" onclick="location.href='/home'"><i class="fas fa-home"></i></button>
+            <button class="button" onclick="location.href='/dog'"><i class="fas fa-dog"></i></button>
+            <button class="button" onclick="location.href='/cat'"><i class="fas fa-cat"></i></button>
+        </div>
+    </div>
+
+    <!-- Centered image section with refresh button -->
+    <div id="center-image">
+        <img src="https://imgur.com/AtIKxK6.png" alt="Centered Image">
+        <button id="refresh-button" onclick="location.reload()">
+            <i class="fas fa-sync"></i>
+        </button>
+    </div>
+
+    <!-- Pet container section -->
+    <div class="pet-container">
+        <!-- Loop through pets and display pet cards -->
+        {% for pet in pets %}
+            <div class="pet-card">
+                <!-- Display pet photo or a message if no photo available -->
+                {% if pet.photos %}
+                    {% if pet.photos[0].medium %}
+                        <img src="{{ pet.photos[0].medium }}" alt="Pet Photo">
+                    {% elif pet.photos[0].small %}
+                        <img src="{{ pet.photos[0].small }}" alt="Pet Photo">
+                    {% endif %}
+                {% else %}
+                    <p>No picture yet, but I still need a friend! Learn more about me!</p>
+                {% endif %}
+
+                <!-- Display pet name and location information -->
+                <div class="pet-content">
+                    {% if pet.name %}
+                        <p>Hi! I'm {{ pet.name }}!</p>
+                    {% endif %}
+                    {% if pet.contact.address %}
+                        {% if pet.contact.address.city and pet.contact.address.state %}
+                            <p>I'm currently living in {{ pet.contact.address.city }}, {{ pet.contact.address.state }}</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Learn more button linking to pet details page -->
+                <a class="learn-more-button" href="{{ url_for('pet_details', pet_id=pet.id) }}">Learn More About Me!</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Script for handling profile button click -->
+    <script>
+        function handleProfileButtonClick() {
+            fetch('/check_auth')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.authenticated) {
+                        window.location.href = '/profile/{{ current_user.username }}';
+                    } else {
+                        window.location.href = '/login';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>
