@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title of the page -->
+    <title>Login</title>
+
+    <!-- Google Fonts and Font Awesome icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- Styles for the page -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFF4BC;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Container for the login section */
+        #login-container {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        /* Styles for input fields */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        /* Common button styles */
+        button {
+            background-color: #DBB51B;
+            color: #FFF4BC;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 10px;
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background-color: #ECB753;
+        }
+
+        /* Error message styles */
+        .message {
+            margin-top: 20px;
+            color: red;
+        }
+
+        /* Top-right buttons container styles */
+        #top-right-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Home button styles */
+        .home-button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: #DBB51B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Home button icon styles */
+        .home-button i {
+            color: #FFF4BC;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top-right buttons section -->
+    <div id="top-right-buttons">
+        <!-- Home button with icon -->
+        <button class="home-button" onclick="location.href='/home'"><i class="fas fa-home"></i></button>
+    </div>
+
+    <!-- Login container section -->
+    <div id="login-container">
+        <!-- Login heading -->
+        <h2>Login</h2>
+
+        <!-- Login form -->
+        <form action="/login" method="post">
+            <!-- Input fields for username and password -->
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <!-- Login button -->
+            <button type="submit">Login</button>
+
+            <!-- Display flashed messages if any -->
+            {% if get_flashed_messages() %}
+                <p class="message">{{ get_flashed_messages() }}</p>
+            {% endif %}
+
+            <!-- Signup button with link -->
+            <button onclick="location.href='/signup'">Sign Up</button>
+        </form>
+    </div>
+</body>
+
+</html>
